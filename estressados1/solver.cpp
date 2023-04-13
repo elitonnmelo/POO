@@ -1,9 +1,4 @@
-/*
-O que foi feito? tudo.
-Com quem foi feito? sozinho
-O que foi aprendido? aprimoramentos com funções
-Tempo estimado para fazer a atividade? uma hora
-*/
+
 #include <iostream>
 #include <vector>
 #include <fn.hpp>

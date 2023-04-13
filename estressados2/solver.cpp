@@ -1,10 +1,4 @@
-/*
-O que foi feito? tudo.
-Com quem foi feito? sozinho.
-O que foi aprendido? manipulação de vetores, obtive dificuldades em manipulaos vetores
-Tempo estimado para fazer a atividade? 1:30  
 
-*/
 #include <iostream>
 #include <vector>
 #include <fn.hpp>
