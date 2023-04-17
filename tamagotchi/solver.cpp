@@ -1,10 +1,3 @@
-/*
-O que foi feito? tudo.
-Com quem foi feito? sozinho e com ajuda do professor
-O que foi aprendido? o uso do contrutor e o uso dos gets e sets, obtive difculdades em fazer o contrutor
-Tempo estimado para fazer a atividade? em sala 30 minutos fora de sala 1:30  
-
-*/
 #include <fn.hpp>
 #include <iostream>
 
