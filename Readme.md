@@ -1,0 +1,1 @@
+# Para rodar os codigos em c++ é necessario adicionar a biblioteca <fn.hpp>
