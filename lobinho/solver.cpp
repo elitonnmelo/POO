@@ -17,6 +17,9 @@
 //         window.display();
 //     }
 // }
+
+//comando para compilar o códgio:   g++ -std=c++17 -Wall -Wextra -Werror solver.cpp -lsfml-graphics -lsfml-window -lsfml-system
+
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
