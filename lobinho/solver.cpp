@@ -1,3 +1,4 @@
+// command to build program: g++ -std=c++17 -Wall -Wextra -Werror solver.cpp -lsfml-graphics -lsfml-window -lsfml-system
 
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
@@ -56,15 +57,30 @@ struct Board {
     }
 };
 
+int windowWidth = 0;
+int windowHeight = 0;
+const int STEP {100};
+
+
 void moveEntity(sf::Keyboard::Key key, Entity& entity, std::vector<sf::Keyboard::Key> move_keys) {
-    if (key == move_keys[0])
+    // if (key == move_keys[0])
+    //     entity.x--;
+    // else if (key == move_keys[1])
+    //     entity.y--;
+    // else if (key == move_keys[2])
+    //     entity.x++;
+    // else if (key == move_keys[3])
+    //     entity.y++;
+
+    if (key == move_keys[0] && entity.x > 0)
         entity.x--;
-    else if (key == move_keys[1])
+    else if (key == move_keys[1] && entity.y > 0)
         entity.y--;
-    else if (key == move_keys[2])
+    else if (key == move_keys[2] && entity.x < windowWidth / STEP - 1)
         entity.x++;
-    else if (key == move_keys[3])
+    else if (key == move_keys[3] && entity.y < windowHeight / STEP - 1)
         entity.y++;
+
 }
 
 sf::Texture loadTexture(std::string path) {
@@ -76,13 +92,16 @@ sf::Texture loadTexture(std::string path) {
     return texture;
 }
 
+
+
 int main() {
 
     sf::Texture wolf_tex { loadTexture("lobol.png") };
     sf::Texture rabbit_tex { loadTexture("coelho.png") };
     sf::Texture grass_tex { loadTexture("grama.jpg") };
 
-    const int STEP {100};
+    //const int STEP {100};
+
 
     Entity wolf(1, 1, STEP, wolf_tex);
     Entity rabbit(3, 3, STEP, rabbit_tex);
@@ -92,42 +111,44 @@ int main() {
 
     bool wolfAteRabbit = (false);
 
+    sf::Vector2u windowSize = window.getSize();
+    windowWidth = windowSize.x;
+    windowHeight = windowSize.y;
+
+
     while (window.isOpen()) {
         sf::Event event;
         while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed) {
                 window.close();
             } else if (event.type == sf::Event::KeyPressed) {
+                if (wolfAteRabbit) {
+                    break;
+                }
                 moveEntity(event.key.code, wolf, {sf::Keyboard::Left, sf::Keyboard::Up, sf::Keyboard::Right, sf::Keyboard::Down});
                 moveEntity(event.key.code, rabbit, {sf::Keyboard::A, sf::Keyboard::W, sf::Keyboard::D, sf::Keyboard::S});
-
                 if ((wolf.x == rabbit.x) && (wolf.y == rabbit.y) && (event.key.code == sf::Keyboard::Enter)) {
                     wolfAteRabbit = (true);
                 }
             }
         }
 
-  
-        window.clear();
-        board.draw(window);
-        wolf.draw(window);
-        rabbit.draw(window);
-        window.display(); 
-
         if (wolfAteRabbit) {
-            sf::Font font;
-            sf::Text message;
-            message.setFont(font);
-            message.setCharacterSize(36);
-            message.setFillColor(sf::Color::White);
-            message.setString("O lobo devorou o coelho!");
-            message.setPosition(100, 100); 
-
-            window.draw(message);
+            window.clear();
+            
+            //draw a big red x in the screen
+            sf::RectangleShape line1(sf::Vector2f(100, 10));
+            line1.rotate(45);
+            line1.setPosition(200, 200);
+            line1.setFillColor(sf::Color::Red);
+            window.draw(line1);
             window.display();
-
-            sf::sleep(sf::seconds(3));
-            window.close();
+        } else {
+            window.clear();
+            board.draw(window);
+            wolf.draw(window);
+            rabbit.draw(window);
+            window.display(); 
         }
     }
 
