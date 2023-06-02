@@ -1,26 +1,6 @@
-// #include <iostream>
-// #include <SFML/Graphics.hpp>
-
-// int main() {
-//     sf::RenderWindow window(sf::VideoMode(800, 600), "SFML works!");
-//     sf::CircleShape shape(100.f);
-//     shape.setFillColor(sf::Color::Green);
-
-//     while (window.isOpen()) {
-//         sf::Event event;
-//         while(window.pollEvent(event)) {
-//             if ( event.type == sf::Event::Closed) {
-//                 window.close();
-//             }
-//         }
-//         window.clear();
-//         window.display();
-//     }
-// }
-
-//comando para compilar o códgio:   g++ -std=c++17 -Wall -Wextra -Werror solver.cpp -lsfml-graphics -lsfml-window -lsfml-system
 
 #include <SFML/Graphics.hpp>
+#include <SFML/System.hpp>
 #include <iostream>
 
 void setSize(sf::Sprite& sprite, int width, int height) {
@@ -110,6 +90,8 @@ int main() {
 
     sf::RenderWindow window(sf::VideoMode(board.nc * STEP, board.nl * STEP), "SFML works!");
 
+    bool wolfAteRabbit = (false);
+
     while (window.isOpen()) {
         sf::Event event;
         while (window.pollEvent(event)) {
@@ -118,6 +100,10 @@ int main() {
             } else if (event.type == sf::Event::KeyPressed) {
                 moveEntity(event.key.code, wolf, {sf::Keyboard::Left, sf::Keyboard::Up, sf::Keyboard::Right, sf::Keyboard::Down});
                 moveEntity(event.key.code, rabbit, {sf::Keyboard::A, sf::Keyboard::W, sf::Keyboard::D, sf::Keyboard::S});
+
+                if ((wolf.x == rabbit.x) && (wolf.y == rabbit.y) && (event.key.code == sf::Keyboard::Enter)) {
+                    wolfAteRabbit = (true);
+                }
             }
         }
 
@@ -127,6 +113,22 @@ int main() {
         wolf.draw(window);
         rabbit.draw(window);
         window.display(); 
+
+        if (wolfAteRabbit) {
+            sf::Font font;
+            sf::Text message;
+            message.setFont(font);
+            message.setCharacterSize(36);
+            message.setFillColor(sf::Color::White);
+            message.setString("O lobo devorou o coelho!");
+            message.setPosition(100, 100); 
+
+            window.draw(message);
+            window.display();
+
+            sf::sleep(sf::seconds(3));
+            window.close();
+        }
     }
 
     return 0;
