@@ -44,6 +44,15 @@ class Bubble{
         void update() {
             this->y += this->speed;
         }
+
+        void draw(sf::RenderWindow& window) {
+            sf::CircleShape circle (Bubble::radius);
+            circle.setPosition(x, y);
+            circle.setFillColor(sf::Color::Blue);
+            window.draw(circle);
+            static Pencil pencil(window);
+            pencil.write(std::string(1, letter), x + 0.2 * Bubble::radius, y, Bubble::radius * 1.5, sf::Color::Red);
+        }
 };
 
 // class Board{};
@@ -66,9 +75,12 @@ class Game{
         }
 
         void draw() {
-            window.clear(sf::Color::Black);
-            static Pencil pencil(window);
-            pencil.write("Iniciando o jogo", 250, 250, 50, sf::Color::Blue);
+        window.clear(sf::Color::Black);
+           static Bubble bubble(200, 100, 'B', 2);
+           bubble.update();
+           bubble.draw(window); 
+            // static Pencil pencil(window);
+            // pencil.write("Iniciando o jogo", 250, 250, 50, sf::Color::Blue);
             window.display();
         }
 
