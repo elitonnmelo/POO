@@ -27,7 +27,24 @@ class Pencil{
         }
 };
 
-// class Bubble{};
+class Bubble{
+    
+    int x;
+    int y;
+    char letter;
+    int speed;
+
+    static const int radius {10};
+    bool alive {true};
+
+    public:
+        Bubble( int x, int y, char letter, int speed) : x{x}, y{y}, letter{letter}, speed{speed} {     
+        }
+
+        void update() {
+            this->y += this->speed;
+        }
+};
 
 // class Board{};
 
