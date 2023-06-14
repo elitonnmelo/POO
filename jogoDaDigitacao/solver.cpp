@@ -2,7 +2,9 @@
 */
 
 #include <SFML/Graphics.hpp>
-#include  <iostream>
+#include <iostream>
+#include <vector>
+
 
 class Pencil{
     sf::RenderWindow& window;
@@ -29,7 +31,7 @@ class Pencil{
 
 class Bubble{
     
-    int x;
+    public: int x;
     int y;
     char letter;
     int speed;
@@ -55,14 +57,96 @@ class Bubble{
         }
 };
 
-// class Board{};
+class Board{
+    sf::RenderWindow& window;
+    std::vector<Bubble> bubbles;
+    Pencil pencil;
+    int hits {0};
+    int misses {0};
+
+    public:
+        Board(sf::RenderWindow& window) : window{window}, pencil{window} {
+        }
+
+        void update() {
+            if (this->check_new_bubble()) {
+                this->add_new_bubble();
+            }
+
+            for (Bubble& bubble : bubbles){
+                bubble.update();
+            }
+            this->mark_outside_bubbles();
+            this->remove_dead_bubbles();
+        }
+
+        void remove_dead_bubbles() {
+            std::vector<Bubble> vivas;
+            for (Bubble& bubble : bubbles) {
+                if (bubble.alive) {
+                    vivas.push_back(bubble);
+                }
+            }
+            this->bubbles = vivas;
+
+        }
+
+        void mark_outside_bubbles() {
+            for (Bubble& bubble : bubbles) {
+                if (bubble.y + 2 * Bubble::radius > (int) this->window.getSize().y) {
+                    if (bubble.alive) {
+                        bubble.alive = false;
+                        this->misses++;
+                    }
+                }
+            }
+        }
+        void mark_by_hit(char letter) {
+            for (Bubble& bubble : bubbles) {
+                if (bubble.letter == letter) {
+                    bubble.alive = false;
+                    this->hits++;
+                    break;
+                }
+            }
+        }
+
+        bool  check_new_bubble() {
+            static const int  new_bubble_timout {30};
+            static int new_bubble_timer {0};
+
+            new_bubble_timer--;
+            if (new_bubble_timer <= 0) {
+                new_bubble_timer = new_bubble_timout;
+                return true;
+            }
+            return false;
+        }
+
+        void add_new_bubble() {
+            int x = rand() % ((int) this->window.getSize().x - 2 * Bubble::radius);
+            int y = -2 * Bubble::radius;
+            int speed = rand() % 5 + 1;
+            char letter = rand() % 26 + 'A';
+            bubbles.push_back(Bubble(x, y, letter, speed));
+        }
+
+        void draw() {
+            pencil.write("Hits: " + std::to_string(this->hits) + " Misses: " + std::to_string(this->misses), 10, 10, 20, sf::Color::White);
+            pencil.write("Size: " + std::to_string(this->bubbles.size()), 10, 30, 20, sf::Color::White);
+            for (Bubble& bubble : bubbles) {
+                bubble.draw(window);
+            }
+        }
+};
 
 class Game{
     sf::RenderWindow window;
+    Board board;
 
     public:
-        Game() : window(sf::VideoMode(800, 600), "bull"){
-            window.setFramerateLimit(60);
+        Game() : window(sf::VideoMode(800, 600), "Bubbles"), board(window){
+            window.setFramerateLimit(30);
         }
 
         void process_envets() {
@@ -71,14 +155,18 @@ class Game{
                 if (event.type == sf::Event::Closed) {
                     window.close();
                 }
+                else if (event.type == sf::Event::TextEntered) {
+                    char code = static_cast<char>(event.text.unicode);
+                    code = toupper(code);
+                    board.mark_by_hit(code);
+                }
             }
         }
 
         void draw() {
-        window.clear(sf::Color::Black);
-           static Bubble bubble(200, 100, 'B', 2);
-           bubble.update();
-           bubble.draw(window); 
+            board.update();
+            window.clear(sf::Color::Black);
+            board.draw();
             // static Pencil pencil(window);
             // pencil.write("Iniciando o jogo", 250, 250, 50, sf::Color::Blue);
             window.display();
