@@ -4,6 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <vector>
+#include <functional>
 
 
 class Pencil{
@@ -42,7 +43,7 @@ class Bubble{
     public:
         Bubble( int x, int y, char letter, int speed) : x{x}, y{y}, letter{letter}, speed{speed} {     
         }
-
+    
         void update() {
             this->y += this->speed;
         }
@@ -66,6 +67,14 @@ class Board{
 
     public:
         Board(sf::RenderWindow& window) : window{window}, pencil{window} {
+        }
+
+        int getMisses() {
+            return misses;
+        }
+
+        int getHits() {
+            return hits;
         }
 
         void update() {
@@ -126,7 +135,7 @@ class Board{
         void add_new_bubble() {
             int x = rand() % ((int) this->window.getSize().x - 2 * Bubble::radius);
             int y = -2 * Bubble::radius;
-            int speed = rand() % 5 + 1;
+            int speed = rand() % 20 + 1;
             char letter = rand() % 26 + 'A';
             bubbles.push_back(Bubble(x, y, letter, speed));
         }
@@ -143,9 +152,13 @@ class Board{
 class Game{
     sf::RenderWindow window;
     Board board;
+    std::function<void()> on_update;
 
     public:
         Game() : window(sf::VideoMode(800, 600), "Bubbles"), board(window){
+            this->on_update = [&]() {
+                this->starting();
+            };
             window.setFramerateLimit(30);
         }
 
@@ -163,24 +176,49 @@ class Game{
             }
         }
 
-        void draw() {
+        void gameplay() {
             board.update();
             window.clear(sf::Color::Black);
             board.draw();
             // static Pencil pencil(window);
             // pencil.write("Iniciando o jogo", 250, 250, 50, sf::Color::Blue);
             window.display();
+            if (board.getMisses() > 5) {
+                this->on_update = [&]() {
+                    this->game_over();
+                };
+            }
         }
+        void game_over() {
+            static Pencil pencil(window);
+            window.clear(sf::Color::Red);
+            pencil.write("Game Over", 300, 250, 50, sf::Color::White);
+            window.display();
+        }
+
+        void starting() {
+            static Pencil pencil(window);
+            window.clear(sf::Color::Black);
+            pencil.write("Iniciar o jogo", 250, 250, 50, sf::Color::Blue);
+            pencil.write("Precione a tecla Enter para iniciar o jogo", 200, 550, 25, sf::Color::Blue);
+            window.display();
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) {
+                this->on_update = [&]() {
+                    this->gameplay();
+                };
+            }
+            
+        }
+
+        
 
         void main_loop() {
             while( window.isOpen()) {
                 process_envets();
-                draw();
+                on_update();
             }
         }
 };
-
-//void process_envents(sf::RenderWindow& window, Game &gmae){};
 
 int main(){
 
