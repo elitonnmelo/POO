@@ -157,7 +157,7 @@ class Game{
     public:
         Game() : window(sf::VideoMode(800, 600), "Bubbles"), board(window){
             this->on_update = [&]() {
-                this->starting();
+                this->menu();
             };
             window.setFramerateLimit(30);
         }
@@ -208,6 +208,66 @@ class Game{
                 };
             }
             
+        }
+
+        void changeDifficulty(){
+            
+        }
+
+        void instruction() {
+
+        }
+
+        bool isMouseOverButton(const sf::Vector2i& mousePosition, const sf::RectangleShape& button) {
+            return button.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePosition));
+        }
+
+        void menu() {
+            static Pencil pencil(window);
+            window.clear(sf::Color::Black);
+
+            // Método botão para jogar
+            sf::RectangleShape buttonPlayng(sf::Vector2f(200, 50));
+            buttonPlayng.setPosition(300, 150);
+            buttonPlayng.setFillColor(sf::Color::Green);
+            sf::Vector2i mousePosition = sf::Mouse::getPosition(window);
+            pencil.write("Iniciar o jogo", 300, 150, 40, sf::Color::Blue);
+            if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && isMouseOverButton(mousePosition, buttonPlayng)) {
+                this->on_update = [&]() {
+                    this->starting();
+                };
+            }
+
+            // Método alterar dificuldade
+            sf::RectangleShape buttonDifficulty(sf::Vector2f(200, 50));
+            buttonDifficulty.setPosition(300, 150);
+            buttonDifficulty.setFillColor(sf::Color::Green);
+            sf::Vector2i mousePosition = sf::Mouse::getPosition(window);
+            pencil.write("Alterar dificuldade do jogo", 200, 250, 40, sf::Color::Blue);
+            if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && isMouseOverButton(mousePosition, buttonDifficulty)) {
+                this->on_update = [&]() {
+                    this->changeDifficulty();
+                };
+            }
+            
+            // Intruções do jogo
+            sf::RectangleShape buttonInstruction(sf::Vector2f(200, 50));
+            buttonInstruction.setPosition(300, 150);
+            buttonInstruction.setFillColor(sf::Color::Green);
+            sf::Vector2i mousePosition = sf::Mouse::getPosition(window);
+            pencil.write("Instrucoes do jogo", 250, 350, 40, sf::Color::Blue);
+            if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && isMouseOverButton(mousePosition, buttonInstruction)) {
+                this->on_update = [&]() {
+                    this->instruction();
+                };
+            }
+            
+            window.display();
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) {
+                this->on_update = [&]() {
+                    this->starting();
+                };
+            }
         }
 
         
