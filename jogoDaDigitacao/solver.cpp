@@ -323,9 +323,9 @@ class Game{
         void instruction() {
             static Pencil pencil(window);
             window.clear(sf::Color::Black);
-            pencil.write("Instrucao para jogar", 250, 250, 50, sf::Color::Blue);
-            pencil.write("voce deve teclar as letra que estao apaarecendo em sua tela antes que ela chegue ao final da tela", 250, 250, 50, sf::Color::Blue);
-            pencil.write("Precione ESC para volta ao menu.", 250, 550, 25, sf::Color::Blue);
+            pencil.write("Instrucao para jogar", 180, 100, 50, sf::Color::Blue);
+            pencil.write("Voce deve teclar as letra que estao apaarecendo em\n      sua tela antes que ela chegue ao final da tela", 20, 250, 35, sf::Color::Blue);
+            pencil.write("Precione ESC para volta ao menu.", 230, 550, 25, sf::Color::Blue);
             window.display();
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
                 this->on_update = [&]() {
