@@ -6,7 +6,8 @@
 #include <vector>
 #include <functional>
 
-
+int velocity = 5;
+int freuqencyLetter = 2;
 class Pencil{
     sf::RenderWindow& window;
     sf::Font font;
@@ -135,7 +136,7 @@ class Board{
         void add_new_bubble() {
             int x = rand() % ((int) this->window.getSize().x - 2 * Bubble::radius);
             int y = -2 * Bubble::radius;
-            int speed = rand() % 20 + 1;
+            int speed = rand() % velocity + 1;
             char letter = rand() % 26 + 'A';
             bubbles.push_back(Bubble(x, y, letter, speed));
         }
@@ -194,6 +195,10 @@ class Game{
             window.clear(sf::Color::Red);
             pencil.write("Game Over", 300, 250, 50, sf::Color::White);
             window.display();
+            sf::sleep(sf::milliseconds(2000));
+                this->on_update = [&]() {
+                    this->menu();
+                };
         }
 
         void starting() {
@@ -211,11 +216,77 @@ class Game{
         }
 
         void changeDifficulty(){
-            
+            static Pencil pencil(window);
+            window.clear(sf::Color::Black);
+            pencil.write("Alterar a dificuldade", 200, 80, 50, sf::Color::Blue);
+            pencil.write(" 1 -  Facil.", 270, 200, 40, sf::Color::Blue);
+            pencil.write(" 2 -  Medio.", 270, 270, 40, sf::Color::Blue);
+            pencil.write(" 3 -  Dificil.", 270, 340, 40, sf::Color::Blue);
+            pencil.write(" 4 -  Muito Dificil.", 270, 410, 40, sf::Color::Blue);
+            pencil.write("Precione ESC para volta ao menu.", 240, 550, 25, sf::Color::Blue);
+            window.display();
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+                this->on_update = [&]() {
+                    this->menu();
+                };
+            }
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1)) {
+                window.clear(sf::Color::Black);
+                pencil.write("Dificuldade alterada para: Facil", 80,250, 50, sf::Color::Blue);
+                velocity = 5;
+                window.display();
+                sf::sleep(sf::milliseconds(2000));
+                this->on_update = [&]() {
+                    this->menu();
+                };
+            }
+
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num2)) {
+                window.clear(sf::Color::Black);
+                pencil.write("Dificuldade alterada para: Medio", 80,250, 50, sf::Color::Blue);
+                velocity = 10;
+                window.display();
+                sf::sleep(sf::milliseconds(2000));
+                this->on_update = [&]() {
+                    this->menu();
+                };
+            }
+
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num3)) {
+                window.clear(sf::Color::Black);
+                pencil.write("Dificuldade alterada para: Dificil", 80,250, 50, sf::Color::Blue);
+                velocity = 15;
+                window.display();
+                sf::sleep(sf::milliseconds(2000));
+                this->on_update = [&]() {
+                    this->menu();
+                };
+            }
+
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num4)) {
+                window.clear(sf::Color::Black);
+                pencil.write("Dificuldade alterada para: Muito dificil", 10,250, 50, sf::Color::Blue);
+                velocity = 20;
+                window.display();
+                sf::sleep(sf::milliseconds(2000));
+                this->on_update = [&]() {
+                    this->menu();
+                };
+            }
         }
 
         void instruction() {
-
+            static Pencil pencil(window);
+            window.clear(sf::Color::Black);
+            pencil.write("Instrucao para jogar", 250, 250, 50, sf::Color::Blue);
+            pencil.write("voce deve teclar as letra que estao apaarecendo em sua tela antes que ela chegue ao final da tela", 250, 250, 50, sf::Color::Blue);
+            pencil.write("Precione ESC para volta ao menu.", 250, 550, 25, sf::Color::Blue);
+            window.display();
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+                this->on_update = [&]() {
+                    this->menu();
+                };
+            }
         }
 
         bool isMouseOverButton(const sf::Vector2i& mousePosition, const sf::RectangleShape& button) {
@@ -225,24 +296,23 @@ class Game{
         void menu() {
             static Pencil pencil(window);
             window.clear(sf::Color::Black);
+            sf::Vector2i mousePosition = sf::Mouse::getPosition(window);
 
             // Método botão para jogar
-            sf::RectangleShape buttonPlayng(sf::Vector2f(200, 50));
-            buttonPlayng.setPosition(300, 150);
-            buttonPlayng.setFillColor(sf::Color::Green);
-            sf::Vector2i mousePosition = sf::Mouse::getPosition(window);
+            sf::RectangleShape buttonPlaying(sf::Vector2f(200, 40));
+            buttonPlaying.setPosition(300, 150);
+            buttonPlaying.setFillColor(sf::Color::Green);
             pencil.write("Iniciar o jogo", 300, 150, 40, sf::Color::Blue);
-            if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && isMouseOverButton(mousePosition, buttonPlayng)) {
+            if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && isMouseOverButton(mousePosition, buttonPlaying)) {
                 this->on_update = [&]() {
                     this->starting();
                 };
             }
 
             // Método alterar dificuldade
-            sf::RectangleShape buttonDifficulty(sf::Vector2f(200, 50));
-            buttonDifficulty.setPosition(300, 150);
+            sf::RectangleShape buttonDifficulty(sf::Vector2f(500, 40));
+            buttonDifficulty.setPosition(200, 250);
             buttonDifficulty.setFillColor(sf::Color::Green);
-            sf::Vector2i mousePosition = sf::Mouse::getPosition(window);
             pencil.write("Alterar dificuldade do jogo", 200, 250, 40, sf::Color::Blue);
             if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && isMouseOverButton(mousePosition, buttonDifficulty)) {
                 this->on_update = [&]() {
@@ -251,10 +321,9 @@ class Game{
             }
             
             // Intruções do jogo
-            sf::RectangleShape buttonInstruction(sf::Vector2f(200, 50));
-            buttonInstruction.setPosition(300, 150);
+            sf::RectangleShape buttonInstruction(sf::Vector2f(400, 40));
+            buttonInstruction.setPosition(250, 350);
             buttonInstruction.setFillColor(sf::Color::Green);
-            sf::Vector2i mousePosition = sf::Mouse::getPosition(window);
             pencil.write("Instrucoes do jogo", 250, 350, 40, sf::Color::Blue);
             if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && isMouseOverButton(mousePosition, buttonInstruction)) {
                 this->on_update = [&]() {
