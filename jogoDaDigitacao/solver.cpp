@@ -126,7 +126,6 @@ class Board{
                 bubble.update();
             }
             this->mark_outside_bubbles();
-            //this->mark_by_letter_incorret();
             this->remove_dead_bubbles();
         }
 
@@ -146,7 +145,6 @@ class Board{
                 if (bubble.getY() + 2 * Bubble::radius> (int) this->window.getSize().y) {
                     if (bubble.getAlive()) {
                         bubble.setAlive(false);
-                        //bubble.alive = false;
                         this->misses++;
                     }
                 }
@@ -158,7 +156,6 @@ class Board{
             for (Bubble& bubble : bubbles) {
                 if (bubble.getLetter() == letter) {
                     bubble.setAlive(false);
-                    //bubble.alive = false;
                     this->hits++;
                     break;
                 }
@@ -225,8 +222,6 @@ class Game{
             board.update();
             window.clear(sf::Color::Black);
             board.draw();
-            // static Pencil pencil(window);
-            // pencil.write("Iniciando o jogo", 250, 250, 50, sf::Color::Blue);
             window.display();
             if (board.getMisses() > 5) {
                 board.setMisses(0);
