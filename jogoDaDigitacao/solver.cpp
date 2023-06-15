@@ -5,9 +5,11 @@
 #include <iostream>
 #include <vector>
 #include <functional>
+#include <set>
+
 
 int velocity = 5;
-int freuqencyLetter = 2;
+int freuqencyLetter = 30;
 class Pencil{
     sf::RenderWindow& window;
     sf::Font font;
@@ -33,21 +35,50 @@ class Pencil{
 
 class Bubble{
     
-    public: int x;
+    int x;
     int y;
     char letter;
     int speed;
-
-    static const int radius {10};
     bool alive {true};
+
+    public: static const int radius {10};
 
     public:
         Bubble( int x, int y, char letter, int speed) : x{x}, y{y}, letter{letter}, speed{speed} {     
+        }
+
+        static int getRadius() {
+            return radius;
+        }
+
+        int getX() {
+            return this->x;
+        }
+
+        int getY() {
+            return this->y;
+        }
+
+        int getSpeed() {
+            return this->speed;
+        }
+
+        char getLetter() {
+            return this->letter;
         }
     
         void update() {
             this->y += this->speed;
         }
+
+        bool setAlive(bool value) {
+            return this->alive = value;
+        }
+
+        bool getAlive() {
+            return this->alive;
+        }
+
 
         void draw(sf::RenderWindow& window) {
             sf::CircleShape circle (Bubble::radius);
@@ -74,8 +105,16 @@ class Board{
             return misses;
         }
 
+        int setMisses(int value) {
+            return this->misses = value;
+        }
+
         int getHits() {
             return hits;
+        }
+
+        int setHits(int value) {
+            return this->hits = value;
         }
 
         void update() {
@@ -87,13 +126,14 @@ class Board{
                 bubble.update();
             }
             this->mark_outside_bubbles();
+            //this->mark_by_letter_incorret();
             this->remove_dead_bubbles();
         }
 
         void remove_dead_bubbles() {
             std::vector<Bubble> vivas;
             for (Bubble& bubble : bubbles) {
-                if (bubble.alive) {
+                if (bubble.getAlive()) {
                     vivas.push_back(bubble);
                 }
             }
@@ -103,18 +143,61 @@ class Board{
 
         void mark_outside_bubbles() {
             for (Bubble& bubble : bubbles) {
-                if (bubble.y + 2 * Bubble::radius > (int) this->window.getSize().y) {
-                    if (bubble.alive) {
-                        bubble.alive = false;
+                if (bubble.getY() + 2 * Bubble::radius> (int) this->window.getSize().y) {
+                    if (bubble.getAlive()) {
+                        bubble.setAlive(false);
+                        //bubble.alive = false;
                         this->misses++;
                     }
                 }
             }
         }
+
+        // void mark_by_letter_incorret() {
+        //     int flag = 0;
+        //     for (Bubble& bubble : bubbles) {
+        //         for (int tecla = sf::Keyboard::A; tecla <= sf::Keyboard::Z; tecla++) {
+        //             if (sf::Keyboard::isKeyPressed(static_cast<sf::Keyboard::Key>(tecla))) {
+        //                 if (static_cast<sf::Keyboard::Key>(tecla) != bubble.getLetter()) {
+        //                     this->misses++;
+        //                     flag = 1;
+        //                     break;
+        //                 }
+        //             }
+        //         }
+        //         if (flag) {
+        //             break;
+        //         }
+        //     }
+        // } 
+
+        // std::set<sf::Keyboard::Key> teclasIncorretas;
+
+        // void mark_by_letter_incorret() {
+        //     for (Bubble& bubble : bubbles) {
+        //         bool teclaIncorreta = true;
+        //         for (int tecla = sf::Keyboard::A; tecla <= sf::Keyboard::Z; tecla++) {
+        //             if (sf::Keyboard::isKeyPressed(static_cast<sf::Keyboard::Key>(tecla))) {
+        //                 if (static_cast<sf::Keyboard::Key>(tecla) == bubble.getLetter()) {
+        //                     teclaIncorreta = false;
+        //                     break;
+        //                 }
+        //             }
+        //         }
+        //         if (teclaIncorreta && teclasIncorretas.find(bubble.getLetter()) == teclasIncorretas.end()) {
+        //             this->misses++;
+        //             teclasIncorretas.insert(bubble.getLetter());
+        //         }
+        //     }
+        // }
+
+
+
         void mark_by_hit(char letter) {
             for (Bubble& bubble : bubbles) {
-                if (bubble.letter == letter) {
-                    bubble.alive = false;
+                if (bubble.getLetter() == letter) {
+                    bubble.setAlive(false);
+                    //bubble.alive = false;
                     this->hits++;
                     break;
                 }
@@ -122,7 +205,7 @@ class Board{
         }
 
         bool  check_new_bubble() {
-            static const int  new_bubble_timout {30};
+            static const int  new_bubble_timout {freuqencyLetter};
             static int new_bubble_timer {0};
 
             new_bubble_timer--;
@@ -185,6 +268,8 @@ class Game{
             // pencil.write("Iniciando o jogo", 250, 250, 50, sf::Color::Blue);
             window.display();
             if (board.getMisses() > 5) {
+                board.setMisses(0);
+                board.setHits(0);
                 this->on_update = [&]() {
                     this->game_over();
                 };
@@ -234,6 +319,7 @@ class Game{
                 window.clear(sf::Color::Black);
                 pencil.write("Dificuldade alterada para: Facil", 80,250, 50, sf::Color::Blue);
                 velocity = 5;
+                freuqencyLetter = 30;
                 window.display();
                 sf::sleep(sf::milliseconds(2000));
                 this->on_update = [&]() {
@@ -245,6 +331,7 @@ class Game{
                 window.clear(sf::Color::Black);
                 pencil.write("Dificuldade alterada para: Medio", 80,250, 50, sf::Color::Blue);
                 velocity = 10;
+                freuqencyLetter = 25;
                 window.display();
                 sf::sleep(sf::milliseconds(2000));
                 this->on_update = [&]() {
@@ -256,6 +343,7 @@ class Game{
                 window.clear(sf::Color::Black);
                 pencil.write("Dificuldade alterada para: Dificil", 80,250, 50, sf::Color::Blue);
                 velocity = 15;
+                freuqencyLetter = 20;
                 window.display();
                 sf::sleep(sf::milliseconds(2000));
                 this->on_update = [&]() {
@@ -267,6 +355,7 @@ class Game{
                 window.clear(sf::Color::Black);
                 pencil.write("Dificuldade alterada para: Muito dificil", 10,250, 50, sf::Color::Blue);
                 velocity = 20;
+                freuqencyLetter = 15;
                 window.display();
                 sf::sleep(sf::milliseconds(2000));
                 this->on_update = [&]() {
