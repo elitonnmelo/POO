@@ -153,46 +153,7 @@ class Board{
             }
         }
 
-        // void mark_by_letter_incorret() {
-        //     int flag = 0;
-        //     for (Bubble& bubble : bubbles) {
-        //         for (int tecla = sf::Keyboard::A; tecla <= sf::Keyboard::Z; tecla++) {
-        //             if (sf::Keyboard::isKeyPressed(static_cast<sf::Keyboard::Key>(tecla))) {
-        //                 if (static_cast<sf::Keyboard::Key>(tecla) != bubble.getLetter()) {
-        //                     this->misses++;
-        //                     flag = 1;
-        //                     break;
-        //                 }
-        //             }
-        //         }
-        //         if (flag) {
-        //             break;
-        //         }
-        //     }
-        // } 
-
-        // std::set<sf::Keyboard::Key> teclasIncorretas;
-
-        // void mark_by_letter_incorret() {
-        //     for (Bubble& bubble : bubbles) {
-        //         bool teclaIncorreta = true;
-        //         for (int tecla = sf::Keyboard::A; tecla <= sf::Keyboard::Z; tecla++) {
-        //             if (sf::Keyboard::isKeyPressed(static_cast<sf::Keyboard::Key>(tecla))) {
-        //                 if (static_cast<sf::Keyboard::Key>(tecla) == bubble.getLetter()) {
-        //                     teclaIncorreta = false;
-        //                     break;
-        //                 }
-        //             }
-        //         }
-        //         if (teclaIncorreta && teclasIncorretas.find(bubble.getLetter()) == teclasIncorretas.end()) {
-        //             this->misses++;
-        //             teclasIncorretas.insert(bubble.getLetter());
-        //         }
-        //     }
-        // }
-
-
-
+       
         void mark_by_hit(char letter) {
             for (Bubble& bubble : bubbles) {
                 if (bubble.getLetter() == letter) {
