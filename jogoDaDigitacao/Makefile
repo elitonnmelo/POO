@@ -1,4 +1,3 @@
-# Nome do seu programa
 TARGET = solver
 
 # Compilador que será utilizado
