@@ -2,15 +2,19 @@
 #include <vector>
 
 int divi(int a, int b) {
-    int result;
-    result = a / b;
-    if ( b == 0){
-        throw std::invalid_argument("fail: divisao por zero");
+    try{
+        
+        int result;
+        result = a / b;
+        if ( b == 0){
+            throw std::runtime_error("fail: divisao por zero");
+        }
+        return result;
     }
-    if (std::out_of_range& ){
-        throw std::invalid_argument("fail: falta de argumentos");
+    catch (std::invalid_argument& e) {
+        throw std::invalid_argument("fail: não é u numero.");
     }
-    return result;
+    
     
 }
 
@@ -25,10 +29,10 @@ int main(){
             auto result = divi(n1, n2);
             std::cout << result;
 
-        } catch (std::invalid_argument& e) {
+        } catch (std::runtime_error& e) {
             std::cout <<  e.what() << std::endl;
 
-        } catch (std::out_of_range& e) {
+        } catch (std::invalid_argument& e) {
             std::cout << e.what() << std::endl;
         }
 
