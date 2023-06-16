@@ -21,8 +21,8 @@ main: $(SOURCE)
 
 # Regra para limpar o arquivo
 clean:
-	rm -f $(TARGET)
+	rm -f *.o
 
 # Regra para rodar o programa
-rum: solver
+run: solver
 	./solver
