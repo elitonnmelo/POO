@@ -6,10 +6,10 @@
 #include <vector>
 #include <functional>
 #include <set>
-
+#include <cstdlib>
 
 int velocity = 5;
-int freuqencyLetter = 30;
+int frequencyLetter = 30;
 class Pencil{
     sf::RenderWindow& window;
     sf::Font font;
@@ -44,7 +44,8 @@ class Bubble{
     public: static const int radius {10};
 
     public:
-        Bubble( int x, int y, char letter, int speed) : x{x}, y{y}, letter{letter}, speed{speed} {     
+        Bubble( int x, int y, char letter, int speed) : x{x}, y{y}, letter{letter}, speed{speed} {  
+            //this->radius = rand() % 11 + 10;   
         }
 
         static int getRadius() {
@@ -54,6 +55,8 @@ class Bubble{
         int getX() {
             return this->x;
         }
+
+//int Bubble::radius = 0;
 
         int getY() {
             return this->y;
@@ -142,7 +145,7 @@ class Board{
 
         void mark_outside_bubbles() {
             for (Bubble& bubble : bubbles) {
-                if (bubble.getY() + 2 * Bubble::radius> (int) this->window.getSize().y) {
+                if (bubble.getY() + 2 * Bubble::radius > (int) this->window.getSize().y) {
                     if (bubble.getAlive()) {
                         bubble.setAlive(false);
                         this->misses++;
@@ -163,7 +166,7 @@ class Board{
         }
 
         bool  check_new_bubble() {
-            static const int  new_bubble_timout {freuqencyLetter};
+            static const int  new_bubble_timout {frequencyLetter};
             static int new_bubble_timer {0};
 
             new_bubble_timer--;
@@ -275,7 +278,7 @@ class Game{
                 window.clear(sf::Color::Black);
                 pencil.write("Dificuldade alterada para: Facil", 80,250, 50, sf::Color::Blue);
                 velocity = 5;
-                freuqencyLetter = 30;
+                frequencyLetter = 30;
                 window.display();
                 sf::sleep(sf::milliseconds(2000));
                 this->on_update = [&]() {
@@ -287,7 +290,7 @@ class Game{
                 window.clear(sf::Color::Black);
                 pencil.write("Dificuldade alterada para: Medio", 80,250, 50, sf::Color::Blue);
                 velocity = 10;
-                freuqencyLetter = 25;
+                frequencyLetter = 25;
                 window.display();
                 sf::sleep(sf::milliseconds(2000));
                 this->on_update = [&]() {
@@ -299,7 +302,7 @@ class Game{
                 window.clear(sf::Color::Black);
                 pencil.write("Dificuldade alterada para: Dificil", 80,250, 50, sf::Color::Blue);
                 velocity = 15;
-                freuqencyLetter = 20;
+                frequencyLetter = 20;
                 window.display();
                 sf::sleep(sf::milliseconds(2000));
                 this->on_update = [&]() {
@@ -311,7 +314,7 @@ class Game{
                 window.clear(sf::Color::Black);
                 pencil.write("Dificuldade alterada para: Muito dificil", 10,250, 50, sf::Color::Blue);
                 velocity = 20;
-                freuqencyLetter = 15;
+                frequencyLetter = 15;
                 window.display();
                 sf::sleep(sf::milliseconds(2000));
                 this->on_update = [&]() {
@@ -387,6 +390,7 @@ class Game{
         
 
         void main_loop() {
+            
             while( window.isOpen()) {
                 process_envets();
                 on_update();
@@ -394,8 +398,11 @@ class Game{
         }
 };
 
-int main(){
 
+//int Bubble::radius = 0;
+
+int main(){
+    
      Game game;
      game.main_loop();
     return 0;
