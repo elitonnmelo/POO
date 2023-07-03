@@ -1,9 +1,4 @@
-/*
-O que foi feito? tudo.
-Com quem foi feito? sozinho e pesquisas na internet
-O que foi aprendido? o uso de herança, classes e enuns, obtive difculdades no uso de ponteiros usando o sharedptr, acessar elemntos de outras classes e fazer algumas funçoes
-Tempo estimado para fazer a atividade? 4:30 horas
-*/
+
 
 #include <fn.hpp>
 #include <iostream>
