@@ -25,6 +25,7 @@ Para utilizar este repositório, siga as etapas abaixo:
 1. Clone o repositório para o seu ambiente local utilizando o comando: `git clone https://github.com/seu-usuario/programacao-orientada-objetos-cpp.git`.
 2. Navegue pela pasta "Projetos" e escolha um projeto para explorar. Cada projeto contém um arquivo README.md com instruções detalhadas sobre o exercício e como executá-lo.
 3. Utilize os códigos-fonte dos projetos como referência e guia para suas próprias práticas de programação orientada a objetos em C++.
+4. Certifiuqe-se de ter a biblioteca do fn.hpp intaladada em seu computador, caso não tenha [click aqui](https://github.com/qxcodepoo/arcade/blob/master/base/051/Readme.md#instalando-e-configurando-o-tk-e-o-fncpp) para seguir as intruções de como usa-la.
 
 ## Contribuição
 
